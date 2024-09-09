@@ -1,0 +1,16 @@
+#include <stdio.h>
+int main ()
+{
+	int a,c,d,b;
+	float e,f,g;
+	a = 1207;
+	c = 118;
+	d = 123;
+	printf("Enter car fuel average(only positive number)  : ");
+	scanf("%f",&b);
+	f = 1207/b*2;
+	g = 1207/b*c + 1207/b*d;
+	printf("total fuel consumed = %f\n ",f);
+	printf("Total fuel price = %f\n ", g;
+}
+	
