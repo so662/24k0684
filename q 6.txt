@@ -1,7 +1,0 @@
-#include <stdio.h>
-int main()
-{
-	float grad;
-	grad =  (2-4)/(3-5);
-	printf("The grad  = %.3f ", grad);
-}
