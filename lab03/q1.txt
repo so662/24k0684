@@ -1,0 +1,2 @@
+The integer data type can store upto 2147483647 unsigned number and the number given is greater than the value so it is stored as signed integer
+it is often called as overflow which convert the value in two's complement
