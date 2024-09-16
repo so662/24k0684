@@ -5,7 +5,7 @@ int main()
 	float D,A;
 	printf("Enter Amount : ");
 	scanf("%d",&n);
-	if(n>= 500 && n<= 2000)
+	if(n>= 500 && n< 2000)
 		D = n * 0.05;
 	else if(n>= 2000 && n< 4000)
 		D = n * 0.1;
