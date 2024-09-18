@@ -1,7 +1,7 @@
 Name = Soofiyan Imran
 Roll NUmber = k24-0684
 Section = C
-Date = 
+Date = September 19 2024
 Description = 1 mile = 0.62 km so multiplied by o.62 to convert KM into Miles And then Multiplied by 3600 to convert seconds into hour 
 
 Psedocode
