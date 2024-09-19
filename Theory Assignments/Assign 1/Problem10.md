@@ -2,7 +2,7 @@ Name = Soofiyan Imran
 Roll NUmber = k24-0684
 Section = C
 Date = September 19 2024
-Description = Asking the input from user checking if the last digit of numbers are 90 and removing zero of 90 by multiplying it one less than its place if its at hundreth place it will be multiplied by and added to the previous total and if not 
+Description = Asking the input from user checking if the last digit of numbers are 90 and removing zero of 90 by multiplying it one less than its place if its at hundreth place it will be multiplied by 10 and added to the previous total and if not lat digit will be removed and multiplied the digit by the same place the number is at ,adding in loop 
 
 Psedocode
 START
