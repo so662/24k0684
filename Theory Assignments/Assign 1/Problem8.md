@@ -6,7 +6,7 @@ Description = Asking the number from user to perform sum operation on the digits
 
 Psedocode
 START
-PRINT n
+INPUT n
 sum = 0 
 WHILE n > 0
     last_digit = n%10
