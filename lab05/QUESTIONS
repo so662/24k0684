@@ -1,0 +1,22 @@
+PF LAB 5 QUESTIONS
+1. Write a program that categorizes a person's age into different life stages: Child, Teenager, Adult,
+and Senior, using nested if-else statements.
+2. Create a program that determines if a number is positive, negative, or zero, and if it’s positive,
+checks if it’s an even or odd number.
+3. Write a program that checks if a number is divisible by both 3 and 5 using logical operators.
+4. Create a program that checks if a person is eligible to vote based on their age and citizenship
+status.
+5. Write a program using a ternary operator to find the maximum of two numbers.
+6. Use the ternary operator to check if a number is positive, negative, or zero.
+7. Write a program to swap two numbers using bitwise XOR.
+8. Create a program that counts the number of 1s in the binary representation of a number.
+9. Write a program that checks if a year is a leap year using the modulus operator.
+10. Create a program that calculates the sum of digits of a number until the result is a single digit
+(e.g., 123 -> 6).
+11. Write a program to find the greatest of three numbers using nested if-else statements.
+12. Create a program that calculates the final grade of a student based on multiple criteria,
+including attendance, assignment scores, and exam results, using nested decision structures.
+13. Write a program that uses bitwise operators to perform encryption and decryption of a
+character.
+14. Develop a program that uses logical operators to determine if a person is eligible for a loan
+based on age, income, and credit score.
