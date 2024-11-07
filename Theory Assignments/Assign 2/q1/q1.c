@@ -1,3 +1,7 @@
+//Name = Soofiyan imran
+//Date = 7-oct-2024
+//
+
 #include<stdio.h>
 #include<stdbool.h>
 int main()
