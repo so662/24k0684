@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<strings.h>
-int i,j;
 int main()
 {
 	int i,j,k[100];
