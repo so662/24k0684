@@ -3,7 +3,7 @@
 #include<stdbool.h>
 int main()
 {
-	int i ,j = 0 ,k,count;
+	int i ,j = 0 ,k,count = 0;
 	char arr[100],arr2[100];
 	printf("Enter words(seprated by commas) : ");
 	gets(arr);
