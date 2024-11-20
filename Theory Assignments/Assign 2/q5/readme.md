@@ -1,5 +1,10 @@
+Name = Soofiyan imran
 
+Roll Number = 24k-0684
 
+Section = C
+
+Date = 7-oct-2024
 
 ![q5 a](https://github.com/user-attachments/assets/9190a996-6f89-4e74-ab98-44a5a7a53d30)
 
