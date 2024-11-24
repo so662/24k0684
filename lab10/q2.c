@@ -11,7 +11,6 @@ void reverse_string(char str[], int i,int j)
     temp = str[j];
     str[j] = str[i];
     str[i] = temp;
- //   printf("i = %d\nj = %d\ntemp = %c \n ",i,j,reversed[j]);
     reverse_string(str,i-1,j+1);
 
 }
