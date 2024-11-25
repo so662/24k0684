@@ -15,7 +15,6 @@ void bubble_sort(int arr[],int size)
             arr[j+1] = arr[j];
             arr[j] = temp;
             flag = true;
-        //    printf("\nj = %d\ntemp  = %d\narr[%d] = %d\narr[%d] = %d",j,temp,j,arr[j],j+1,arr[j+1]);
         }  
     }
     if(size == 1 || flag == false)
