@@ -36,4 +36,5 @@ int main()
         cout << "Total Salary : " << total_salary[i] << endl;
         cout << "---------------------------------------" << endl;
     }
+    delete[] emp;
 }
