@@ -20,13 +20,13 @@ public:
         DrawRectangleRounded(Rectangle{x, y, width, height}, 0.8, 0, WHITE);
     }
 
-    void UpdatePlayer(int upKey, int downKey) {
+    void Update(int upKey, int downKey) {
         if (IsKeyDown(upKey)) y -= speed;  
         if (IsKeyDown(downKey)) y += speed;  
         LimitMovement();  
     }
 
-    void UpdateAI(float ball_y) {
+    void Update(float ball_y) {
         if (y + height / 2 > ball_y) y -= speed;  
         if (y + height / 2 < ball_y) y += speed;  
         LimitMovement();  
