@@ -166,11 +166,11 @@ public:
                 DrawLine(1280 / 2, 0, 1280 / 2, 800, WHITE);
 
                 ball.Update();
-                player.UpdatePlayer(KEY_UP, KEY_DOWN);  
+                player.Update(KEY_UP, KEY_DOWN);  
                 if (multiplayer) {
-                    cpu.UpdatePlayer(KEY_W, KEY_S);  
+                    cpu.Update(KEY_W, KEY_S);  
                 } else {
-                    cpu.UpdateAI(ball.y);  
+                    cpu.Update(ball.y);  
                 }
 
             
