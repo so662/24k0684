@@ -1,1 +1,536 @@
-hwha
+COAL PROJECT
+; ==================================================
+; MEMORY MATCHING GAME - 10 PAIRS (20 POSITIONS)
+; ==================================================
+
+INCLUDE Irvine32.inc
+
+.data
+.data
+; BIG WINNER MESSAGES (ASCII Art Style)
+msgWinner1Big BYTE 0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                 #####   ######   #      #     #####     ######        #     #######   #####   | ",0Dh,0Ah
+              BYTE "                #       #      #  ##     #    #          #     #      # #       #     #     #  | ",0Dh,0Ah
+              BYTE "                #       #      #  # #    #    #          #     #     #   #      #     #        | ",0Dh,0Ah
+              BYTE "                #       #      #  #  #   #    #  ####    ######     #     #     #      #####   | ",0Dh,0Ah
+              BYTE "                #       #      #  #    # #    #     #    #   #      #######     #           #  | ",0Dh,0Ah
+              BYTE "                #       #      #  #     ##    #     #    #    #     #     #     #     #     #  | ",0Dh,0Ah
+              BYTE "                 #####   ######   #      #     #####     #     #    #     #     #      #####   0 ",0Dh,0Ah
+              BYTE "                ================================================================================ ",0Dh,0Ah
+              BYTE "                                            PLAYER 1 WINS!                                       ",0Dh,0Ah
+              BYTE "                =================================================================================",0Dh,0Ah,0
+          
+msgWinner2Big BYTE 0Dh,0Ah
+               BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                                                                                                 ",0Dh,0Ah
+              BYTE "                 #####   ######   #      #     #####     ######        #     #######   #####   | ",0Dh,0Ah
+              BYTE "                #       #      #  ##     #    #          #     #      # #       #     #     #  | ",0Dh,0Ah
+              BYTE "                #       #      #  # #    #    #          #     #     #   #      #     #        | ",0Dh,0Ah
+              BYTE "                #       #      #  #  #   #    #  ####    ######     #     #     #      #####   | ",0Dh,0Ah
+              BYTE "                #       #      #  #    # #    #     #    #   #      #######     #           #  | ",0Dh,0Ah
+              BYTE "                #       #      #  #     ##    #     #    #    #     #     #     #     #     #  | ",0Dh,0Ah
+              BYTE "                 #####   ######   #      #     #####     #     #    #     #     #      #####   0 ",0Dh,0Ah
+              BYTE "                ================================================================================ ",0Dh,0Ah
+              BYTE "                                            PLAYER 2 WINS!                                       ",0Dh,0Ah
+              BYTE "                =================================================================================",0Dh,0Ah,0
+menuTitle   BYTE "===== MEMORY MATCHING GAME =====",0
+menu1       BYTE "1 - Single Player",0
+menu2       BYTE "2 - Multiplayer (2 Players)",0
+menu3       BYTE "3 - Exit",0   
+menuChoice  BYTE "Enter your choice: ",0
+
+msgTitle    BYTE "==== MEMORY MATCHING GAME ====",0
+msgBoard    BYTE "Current Board:",0
+msgPick1    BYTE "Pick first position (0-19): ",0
+msgPick2    BYTE "Pick second position (0-19): ",0
+msgMatch    BYTE "Great! It's a MATCH!",0
+msgFail     BYTE "Not a match. Try again.",0
+msgWin      BYTE "All pairs found! You Win!",0
+msgScore1   BYTE "Player 1 Score: ",0
+msgScore2   BYTE "Player 2 Score: ",0
+msgWinner1  BYTE "Player 1 Wins!",0
+msgWinner2  BYTE "Player 2 Wins!",0
+msgTie      BYTE "It's a Tie!",0
+msgPlayAgain BYTE "Play again? (1=Yes, 2=Menu, 3=Exit): ",0
+msgPlayerTurn BYTE "Player ",0
+msgTurn     BYTE " turn!",0
+
+newline     BYTE 0Dh,0Ah,0
+
+; GAME DATA - 10 PAIRS (20 positions)
+symbols     BYTE 'A','B','C','D','E','F','G','H','I','J'
+            BYTE 'A','B','C','D','E','F','G','H','I','J'
+
+hidden      BYTE 20 DUP('*')
+matched     BYTE 20 DUP(-1)
+score1      DWORD 0
+score2      DWORD 0
+currentPlayer DWORD 1
+pos1        DWORD -1
+pos2        DWORD -1
+gameMode    DWORD 0
+totalMatches DWORD 0
+
+; Colors
+WHITE       = 0Fh
+YELLOW      = 0Eh
+GREEN       = 0Ah
+LIGHTRED    = 0Ch
+LIGHTBLUE   = 09h
+
+.code
+
+Menu PROC
+menuStart:
+    call Clrscr
+    mov eax, YELLOW
+    call SetTextColor
+    mov edx, OFFSET menuTitle
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+
+    mov eax, WHITE
+    call SetTextColor
+    mov edx, OFFSET menu1
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+    mov edx, OFFSET menu2
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+    mov edx, OFFSET menu3
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+
+    mov edx, OFFSET menuChoice
+    call WriteString
+    call ReadInt
+
+    cmp eax, 1
+    je singlePlayer
+    cmp eax, 2
+    je multiPlayer
+    cmp eax, 3
+    je exitProgram
+    jmp menuStart
+
+singlePlayer:
+    mov gameMode, 1
+    mov eax, 1
+    ret
+
+multiPlayer:
+    mov gameMode, 2
+    mov eax, 2
+    ret
+
+exitProgram:
+    mov eax, 0
+    ret
+Menu ENDP
+
+ShuffleSymbols PROC
+    mov ecx, 80
+shuffleLoop:
+    mov eax, 20
+    call RandomRange
+    mov ebx, eax
+    mov eax, 20
+    call RandomRange
+    mov edx, eax
+    mov al, symbols[ebx]
+    mov ah, symbols[edx]
+    mov symbols[ebx], ah
+    mov symbols[edx], al
+    loop shuffleLoop
+    ret
+ShuffleSymbols ENDP
+
+ShowBoard PROC
+    mov eax, WHITE
+    call SetTextColor
+    mov edx, OFFSET msgBoard
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+
+    ; Show hidden symbols in 2 rows
+    mov ecx, 2
+    mov esi, 0
+rowLoop:
+    push ecx
+    mov ecx, 10
+colLoop:
+    mov al, hidden[esi]
+    call WriteChar
+    mov al, ' '
+    call WriteChar
+    inc esi
+    loop colLoop
+    mov edx, OFFSET newline
+    call WriteString
+    pop ecx
+    loop rowLoop
+
+    mov edx, OFFSET newline
+    call WriteString
+
+    ; Show position numbers
+    mov ecx, 2
+    mov esi, 0
+numRowLoop:
+    push ecx
+    mov ecx, 10
+numColLoop:
+    mov eax, esi
+    call WriteDec
+    mov al, ' '
+    call WriteChar
+    inc esi
+    loop numColLoop
+    mov edx, OFFSET newline
+    call WriteString
+    pop ecx
+    loop numRowLoop
+
+    mov edx, OFFSET newline
+    call WriteString
+    ret
+ShowBoard ENDP
+
+CheckWin PROC
+    mov eax, totalMatches
+    cmp eax, 10
+    jge gameWon
+    mov eax, 0
+    ret
+gameWon:
+    mov eax, 1
+    ret
+CheckWin ENDP
+
+ValidatePick PROC
+    cmp eax, 0
+    jl invalid
+    cmp eax, 19
+    ja invalid
+    mov ebx, eax
+    cmp matched[ebx], 1
+    je invalid
+    mov al, 1
+    ret
+invalid:
+    mov al, 0
+    ret
+ValidatePick ENDP
+
+ShowPlayerTurn PROC
+    mov eax, LIGHTBLUE
+    call SetTextColor
+    mov edx, OFFSET msgPlayerTurn
+    call WriteString
+    mov eax, currentPlayer
+    call WriteDec
+    mov edx, OFFSET msgTurn
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+    mov eax, WHITE
+    call SetTextColor
+    ret
+ShowPlayerTurn ENDP
+
+ResetHidden PROC
+    ; Reset ALL positions to '*' first
+    mov ecx, 20
+    mov esi, 0
+resetAll:
+    mov hidden[esi], '*'
+    inc esi
+    loop resetAll
+
+    mov ecx, 20
+    mov esi, 0
+showMatched:
+    cmp matched[esi], 1
+    jne skipShow
+    mov al, symbols[esi]
+    mov hidden[esi], al
+skipShow:
+    inc esi
+    loop showMatched
+    ret
+ResetHidden ENDP
+
+main PROC
+    call Randomize
+
+menuAgain:
+    call Menu
+    cmp eax, 0
+    je endProgram
+
+    mov gameMode, eax
+    call ShuffleSymbols
+    
+    ; Reset game state
+    mov ecx, 20
+    mov esi, 0
+initLoop:
+    mov hidden[esi], '*'
+    mov matched[esi], -1
+    inc esi
+    loop initLoop
+    
+    mov score1, 0
+    mov score2, 0
+    mov currentPlayer, 1
+    mov pos1, -1
+    mov pos2, -1
+    mov totalMatches, 0
+
+    call Clrscr
+    mov eax, YELLOW
+    call SetTextColor
+    mov edx, OFFSET msgTitle
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+
+gameLoop:        
+    call ShowBoard
+    call ShowPlayerTurn
+
+    ; FIRST PICK
+pick1:
+    mov edx, OFFSET msgPick1
+    call WriteString
+    call ReadInt
+    mov ebx, eax         ; Save user input
+    call ValidatePick
+    cmp al, 1
+    je pick1ok
+    
+    mov eax, LIGHTRED
+    call SetTextColor
+    mov edx, OFFSET msgFail
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+    mov eax, 400
+    call Delay
+    jmp pick1
+
+pick1ok:
+    mov pos1, ebx        ; Use saved input
+    mov al, symbols[ebx]
+    mov hidden[ebx], al
+    call ShowBoard
+    call ShowPlayerTurn
+
+    ; SECOND PICK  
+pick2:
+    mov edx, OFFSET msgPick2
+    call WriteString
+    call ReadInt
+    mov ebx, eax         ; Save user input before ValidatePick
+    call ValidatePick
+    cmp al, 1
+    je pick2ok
+
+    mov eax, LIGHTRED
+    call SetTextColor
+    mov edx, OFFSET msgFail
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+    mov eax, 400
+    call Delay
+    jmp pick2
+
+pick2ok:
+    mov pos2, ebx        ; Use saved input
+    mov ecx, ebx
+    cmp ecx, pos1
+    je samePick
+
+    mov al, symbols[ecx]    ; Get ACTUAL symbol from shuffled array  
+    mov hidden[ecx], al     ; Show ONLY this position
+    call ShowBoard
+
+    ; CHECK MATCH
+    mov ebx, pos1
+    mov ecx, pos2
+    mov al, symbols[ebx]
+    cmp al, symbols[ecx]
+    jne notMatch
+
+    ; MATCH FOUND - cards stay open permanently
+    mov matched[ebx], 1
+    mov matched[ecx], 1
+    inc totalMatches
+    
+    mov eax, currentPlayer
+    cmp eax, 1
+    jne player2Score
+    inc score1
+    jmp scoreDone
+player2Score:
+    inc score2
+scoreDone:
+
+    mov eax, GREEN
+    call SetTextColor
+    mov edx, OFFSET msgMatch
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+    mov eax, 1000
+    call Delay
+
+    call CheckWin
+    cmp eax, 1
+    je gameOver
+
+    ; In multiplayer, same player continues on match
+    mov eax, gameMode
+    cmp eax, 2
+    jne switchPlayer
+    jmp gameLoop
+
+samePick:
+    mov eax, LIGHTRED
+    call SetTextColor
+    mov edx, OFFSET msgFail
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+    mov eax, 400
+    call Delay
+    jmp gameLoop
+
+notMatch:
+    mov eax, LIGHTRED
+    call SetTextColor
+    mov edx, OFFSET msgFail
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+    mov eax, 1000
+    call Delay
+    call ResetHidden
+
+switchPlayer:
+    mov eax, gameMode
+    cmp eax, 2
+    jne continueGame
+    
+    mov eax, currentPlayer
+    cmp eax, 1
+    jne setPlayer1
+    mov currentPlayer, 2
+    jmp playerSwitched
+setPlayer1:
+    mov currentPlayer, 1
+playerSwitched:
+
+continueGame:
+    jmp gameLoop
+
+gameOver:
+    call Clrscr
+    mov eax, YELLOW
+    call SetTextColor
+    mov edx, OFFSET msgWin
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+
+    ; Show final scores
+    mov eax, WHITE
+    call SetTextColor
+    mov edx, OFFSET msgScore1
+    call WriteString
+    mov eax, score1
+    call WriteDec
+    mov edx, OFFSET newline
+    call WriteString
+
+    mov edx, OFFSET msgScore2
+    call WriteString
+    mov eax, score2
+    call WriteDec
+    mov edx, OFFSET newline
+    call WriteString
+
+    ; Determine winner
+    mov eax, score1
+    cmp eax, score2
+    jg player1Wins
+    jl player2Wins
+
+    mov edx, OFFSET msgTie
+    call WriteString
+    jmp showWinnerDone
+
+player1Wins:
+    mov eax, GREEN
+    call SetTextColor
+    call Clrscr
+    mov edx, OFFSET msgWinner1Big
+    call WriteString
+    mov al, 7           ; Bell character for beep
+    call WriteChar
+    jmp showWinnerDone
+
+player2Wins:
+    mov eax, GREEN
+    call SetTextColor
+    call Clrscr
+    mov edx, OFFSET msgWinner2Big
+    call WriteString
+    mov al, 7           ; Bell character for beep
+    call WriteChar
+    jmp showWinnerDone
+
+showWinnerDone:
+    mov edx, OFFSET newline
+    call WriteString
+    mov edx, OFFSET newline
+    call WriteString
+
+playAgainPrompt:
+    mov edx, OFFSET msgPlayAgain
+    call WriteString
+    call ReadInt
+
+    cmp eax, 1
+    je restartGame
+    cmp eax, 2
+    je menuAgain
+    cmp eax, 3
+    je endProgram
+    jmp playAgainPrompt
+
+restartGame:
+    jmp menuAgain
+
+endProgram:
+    exit
+main ENDP
+END main
