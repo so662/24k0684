@@ -1,0 +1,6 @@
+x = input("Enter String: ")
+print("Second Character of the String is: ", x[1])
+print("Second Last Character of the String is: ", x[-2])
+print("Length of the String is: ", len(x))
+print("Uppercase String: ", x.upper())
+print("Number of words in the String: ", len(x.split()))
